@@ -1,6 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<title>Locked Page</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Password screen */
+  #lock {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  /* Hidden content */
+  #content {
+    display: none;
+    padding: 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Password screen -->
+<div id="lock">
+  <h2>Enter Password</h2>
+  <input type="password" id="pw">
+  <button onclick="unlock()">Enter</button>
+  <p id="msg" style="color:red;"></p>
+</div>
+
+<!-- Your real site (hidden at first) -->
+<div id="content">
+  <h1>Your Site</h1>
+  <p>Everything goes here. Users cannot see this until the password is correct.</p>
+</div>
+
+<script>
+function unlock() {
+  if (document.getElementById("pw").value === "4321") {
+    document.getElementById("lock").style.display = "none";
+    document.getElementById("content").style.display = "block";
+  } else {
+    document.getElementById("msg").innerText = "Wrong password";
+  }
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,5 +158,6 @@
 
 
 <script src="script.js"></script>
+
 
 
