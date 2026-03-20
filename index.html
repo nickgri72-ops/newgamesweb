@@ -1,67 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7462828797160107"
-     crossorigin="anonymous"></script>
-    <script type="text/javascript"> adroll_adv_id = "VAZHRT42M5ATVHVSQIRUWA"; adroll_pix_id = "YHOUZNT4K5F55FKZ6OCQ5H"; adroll_version = "2.0";  (function(w, d, e, o, a) { w.adroll_tag_source = w.adroll_tag_source || "manual"; w.__adroll_loaded = true; w.adroll = w.adroll || []; w.adroll.f = [ 'setProperties', 'identify', 'track', 'identify_email', 'get_cookie' ]; var roundtripUrl = "https://s.adroll.com/j/" + adroll_adv_id + "/roundtrip.js"; for (a = 0; a < w.adroll.f.length; a++) { w.adroll[w.adroll.f[a]] = w.adroll[w.adroll.f[a]] || (function(n) { return function() { w.adroll.push([ n, arguments ]) } })(w.adroll.f[a]) }  e = d.createElement('script'); o = d.getElementsByTagName('script')[0]; e.async = 1; e.src = roundtripUrl; o.parentNode.insertBefore(e, o); })(window, document); adroll.track("pageView"); </script> 
-    <meta charset="UTF-8">
-    <title>Protected Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 100px;
-            background-color: #f2f2f2;
-        }
-        input {
-            padding: 10px;
-            font-size: 16px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #message {
-            margin-top: 20px;
-            color: red;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Calculator</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e8eaed;
+    font-family: Arial, sans-serif;
+  }
+
+  .calculator {
+    display: flex;
+    gap: 20px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+    width: 850px;
+  }
+
+  #display {
+    position: absolute;
+    top: 40px;
+    width: 800px;
+    height: 70px;
+    font-size: 32px;
+    text-align: right;
+    border: none;
+    background: transparent;
+    outline: none;
+  }
+
+  .left, .right {
+    display: grid;
+    gap: 10px;
+  }
+
+  .left {
+    grid-template-columns: repeat(4, 1fr);
+    width: 60%;
+  }
+
+  .right {
+    grid-template-columns: repeat(3, 1fr);
+    width: 40%;
+  }
+
+  button {
+    height: 55px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f1f3f4;
+  }
+
+  button:hover {
+    background: #e0e0e0;
+  }
+
+  .operator {
+    background: #dadce0;
+  }
+
+  .equal {
+    background: #4285f4;
+    color: white;
+  }
+
+  .clear {
+    background: #ea4335;
+    color: white;
+  }
+</style>
 </head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7462828797160107"
-     crossorigin="anonymous"></script>
-<!-- Ad -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-7462828797160107"
-     data-ad-slot="8397556613"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+
+<body>
+
+<input type="text" id="display" disabled>
+
+<div class="calculator">
+
+  <!-- LEFT SIDE -->
+  <div class="left">
+    <button onclick="press('Math.sin(')">sin</button>
+    <button onclick="press('Math.cos(')">cos</button>
+    <button onclick="press('Math.tan(')">tan</button>
+    <button onclick="press('Math.sqrt(')">√</button>
+
+    <button onclick="press('Math.log10(')">log</button>
+    <button onclick="press('Math.log(')">ln</button>
+    <button onclick="press('Math.PI')">π</button>
+    <button onclick="press('^')">xʸ</button>
+
+    <button onclick="press('(')">(</button>
+    <button onclick="press(')')">)</button>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+    <!-- ROW 1 -->
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+
+    <!-- ROW 2 -->
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+
+    <!-- ROW 3 -->
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+
+    <!-- ROW 4 -->
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="backspace()">⌫</button>
+
+    <!-- OPERATORS -->
+    <button class="operator" onclick="press('+')">+</button>
+    <button class="operator" onclick="press('-')">−</button>
+    <button class="operator" onclick="press('*')">×</button>
+
+    <button class="operator" onclick="press('/')">÷</button>
+    <button class="equal" onclick="calculate()">=</button>
+
+    <!-- CLEAR BUTTON (ONLY HERE NOW) -->
+    <button class="clear" onclick="clearDisplay()">C</button>
+  </div>
+
+</div>
+
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-    <body>
+let input = "";
 
-<h1>Enter Password</h1>
-<input type="password" id="passwordInput" placeholder="Password">
-<button onclick="checkPassword()">Submit</button>
-<div id="message"></div>
+function press(val) {
+  input += val;
+  document.getElementById("display").value = input;
+}
 
-<script>
-    function checkPassword() {
-        const password = document.getElementById('passwordInput').value;
-        const correctPassword = "4321"; // <-- change this to your password
+function clearDisplay() {
+  input = "";
+  document.getElementById("display").value = "";
+}
 
-        if(password === correctPassword) {
-            window.location.href = "Home.html"; // <-- your main site page
-        } else {
-            document.getElementById('message').innerText = "Wrong password!";
-        }
-    }
+function backspace() {
+  input = input.slice(0, -1);
+  document.getElementById("display").value = input;
+}
+
+function calculate() {
+  if (input === "4321") {
+    window.location.href = "Home.html";
+    return;
+  }
+
+  try {
+    let formatted = input.replace(/\^/g, "**");
+    input = eval(formatted).toString();
+    document.getElementById("display").value = input;
+  } catch {
+    document.getElementById("display").value = "Error";
+    input = "";
+  }
+}
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") calculate();
+});
 </script>
 
 </body>
 </html>
-
-
-
