@@ -1,8 +1,3 @@
-# BLAZERGAMES
-
-*Subscribe to Blazer!!!*
-https://youtube.com/c/blazerhm
-
 ## Deployment
 Here are some other deployment options to deploy the site on your own.
 
