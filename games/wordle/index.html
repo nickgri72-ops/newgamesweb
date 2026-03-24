@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Wordle — Any Word</title>
+<style>
+body {
+    font-family: Arial,sans-serif;
+    background:#121213;color:#fff;
+    display:flex;flex-direction:column;
+    align-items:center;padding:20px;
+}
+h1 {margin-bottom:20px;}
+#board{display:grid;grid-template-rows:repeat(6,50px);gap:5px;margin-bottom:20px;}
+.row{display:grid;grid-template-columns:repeat(5,50px);gap:5px;}
+.cell{
+    border:2px solid #3a3a3c;
+    display:flex;align-items:center;
+    justify-content:center;font-weight:bold;font-size:1.5em;
+    text-transform:uppercase;transform-style:preserve-3d;
+}
+.flip{animation:flip .5s forwards;}
+@keyframes flip{0%{transform:rotateX(0deg);}50%{transform:rotateX(90deg);}100%{transform:rotateX(0deg);}}
+.correct{background:#6aaa64;border-color:#6aaa64;}
+.present{background:#c9b458;border-color:#c9b458;}
+.absent{background:#3a3a3c;border-color:#3a3a3c;}
+
+#keyboard{display:grid;grid-template-rows:repeat(3,50px);gap:5px;margin-top:10px;}
+.keyboard-row{display:flex;justify-content:center;gap:5px;}
+.key{
+    padding:10px 15px;background:#818384;border:none;
+    border-radius:4px;font-weight:bold;cursor:pointer;
+    color:white;text-transform:uppercase;user-select:none;
+}
+.key.correct{background:#6aaa64;}
+.key.present{background:#c9b458;}
+.key.absent{background:#3a3a3c;}
+</style>
+</head>
+<body>
+
+<h1>Mini Wordle (Any 5-Letter Word)</h1>
+<div id="board"></div>
+<p id="message"></p>
+<div id="keyboard"></div>
+
+<script>
+const solutionWords = ["APPLE","BREAD","CRANE","DREAM","HOUSE","LIGHT","PLANT","SHORE","WATER","WORLD"];
+let solution = solutionWords[Math.floor(Math.random()*solutionWords.length)];
+let currentRow = 0;
+let currentGuess = "";
+
+const board = document.getElementById("board");
+const keyboard = document.getElementById("keyboard");
+
+// Initialize board
+for(let i=0;i<6;i++){
+    const row=document.createElement("div"); row.className="row";
+    for(let j=0;j<5;j++){
+        const cell=document.createElement("div"); cell.className="cell";
+        row.appendChild(cell);
+    }
+    board.appendChild(row);
+}
+
+// Initialize keyboard
+const layout = ["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+layout.forEach(rowLetters=>{
+    const rowDiv=document.createElement("div"); rowDiv.className="keyboard-row";
+    rowLetters.split("").forEach(letter=>{
+        const key=document.createElement("button"); key.className="key"; key.textContent=letter;
+        key.addEventListener("click",()=>handleKey(letter));
+        rowDiv.appendChild(key);
+    });
+    if(rowLetters==="ZXCVBNM"){
+        const enter=document.createElement("button"); enter.textContent="Enter"; enter.className="key";
+        enter.addEventListener("click",()=>handleKey("Enter"));
+        rowDiv.insertBefore(enter,rowDiv.firstChild);
+
+        const back=document.createElement("button"); back.textContent="⌫"; back.className="key";
+        back.addEventListener("click",()=>handleKey("Backspace"));
+        rowDiv.appendChild(back);
+    }
+    keyboard.appendChild(rowDiv);
+});
+
+// Keyboard input
+document.addEventListener("keydown",e=>{
+    const k=e.key.toUpperCase();
+    if(k==="ENTER") handleKey("Enter");
+    else if(k==="BACKSPACE") handleKey("Backspace");
+    else if(/^[A-Z]$/.test(k)) handleKey(k);
+});
+
+function handleKey(key){
+    const msg=document.getElementById("message");
+    msg.textContent="";
+    if(key==="Enter"){
+        if(currentGuess.length!==5){ msg.textContent="Word must be 5 letters!"; return; }
+        submitGuess();
+    } else if(key==="Backspace"){
+        currentGuess=currentGuess.slice(0,-1); updateBoard();
+    } else if(/^[A-Z]$/.test(key) && currentGuess.length<5){
+        currentGuess+=key; updateBoard();
+    }
+}
+
+function updateBoard(){
+    const row=board.children[currentRow];
+    for(let i=0;i<5;i++) row.children[i].textContent=currentGuess[i]||"";
+}
+
+function submitGuess(){
+    const guess=currentGuess;
+    const row=board.children[currentRow];
+    currentGuess="";
+
+    for(let i=0;i<5;i++){
+        const cell=row.children[i];
+        cell.classList.add("flip");
+        setTimeout(()=>{
+            if(guess[i]===solution[i]) {cell.classList.add("correct"); updateKeyboard(guess[i],"correct");}
+            else if(solution.includes(guess[i])) {cell.classList.add("present"); updateKeyboard(guess[i],"present");}
+            else {cell.classList.add("absent"); updateKeyboard(guess[i],"absent");}
+            cell.classList.remove("flip");
+        }, i*300);
+    }
+    currentRow++;
+
+    setTimeout(()=>{
+        const msg=document.getElementById("message");
+        if(guess===solution) msg.textContent="🎉 You guessed it!";
+        else if(currentRow===6) msg.textContent=`😢 Game over! Word was ${solution}`;
+    },5*300+500);
+}
+
+function updateKeyboard(letter,status){
+    document.querySelectorAll(".key").forEach(key=>{
+        if(key.textContent===letter){
+            const priority={"correct":3,"present":2,"absent":1};
+            const cur=key.classList.contains("correct")?3:key.classList.contains("present")?2:key.classList.contains("absent")?1:0;
+            if(priority[status]>cur){ key.classList.remove("correct","present","absent"); key.classList.add(status);}
+        }
+    });
+}
+</script>
+</body>
+</html>
