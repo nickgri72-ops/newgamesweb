@@ -2,202 +2,255 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Calculator</title>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
   body {
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4facfe, #8e44ad);
+  }
+
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .logo-img {
+    position: absolute;
+    left: 20px;
+    height: 40px;
+    cursor: pointer;
+  }
+
+  .nav {
+    display: flex;
+    gap: 40px;
+    font-weight: 500;
+  }
+
+  .nav-item {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: none;
+    min-width: 180px;
+    text-align: left;
+  }
+
+  .dropdown div {
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .dropdown div:hover {
+    background: #f0f0f0;
+  }
+
+  .nav-item:hover .dropdown {
+    display: block;
+  }
+
+  .wrapper {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #e8eaed;
-    font-family: Arial, sans-serif;
   }
 
-  .calculator {
-    display: flex;
-    gap: 20px;
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.15);
-    width: 850px;
+  .container {
+    background: white;
+    padding: 40px;
+    width: 320px;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.15);
   }
 
-  #display {
-    position: absolute;
-    top: 40px;
-    width: 800px;
-    height: 70px;
-    font-size: 32px;
-    text-align: right;
-    border: none;
-    background: transparent;
-    outline: none;
-    color: #202124;
-  }
-
-  .left, .right {
-    display: grid;
-    gap: 10px;
-  }
-
-  .left {
-    grid-template-columns: repeat(4, 1fr);
-    width: 60%;
-  }
-
-  .right {
-    grid-template-columns: repeat(3, 1fr);
-    width: 40%;
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 
   button {
-    height: 55px;
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
     cursor: pointer;
-    background: #f1f3f4;
+    border: none;
   }
 
-  button:hover {
-    background: #e0e0e0;
-  }
-
-  .operator {
-    background: #dadce0;
-  }
-
-  .equal {
+  .login-btn {
     background: #4285f4;
     color: white;
   }
 
-  .clear {
-    background: #ea4335;
+  .google-btn {
+    margin-top: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .google-btn img {
+    width: 18px;
+  }
+
+  .microsoft-btn {
+    margin-top: 10px;
+    background: #2F2F2F;
     color: white;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    display: none;
+  }
+
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #111;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 18px;
+  }
+
+  .spinner {
+    border: 4px solid #444;
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 15px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% { transform: rotate(360deg); }
   }
 </style>
 </head>
 
 <body>
 
-<input type="text" id="display" disabled>
+<div class="topbar">
+  <img src="logo.png" class="logo-img" onclick="goHome()">
 
-<div class="calculator">
+  <div class="nav">
+    <div class="nav-item">
+      Solutions
+      <div class="dropdown">
+        <div>AI Integration</div>
+        <div>Cloud Storage</div>
+        <div>Security Tools</div>
+      </div>
+    </div>
 
-  <!-- LEFT SIDE -->
-  <div class="left">
-    <button onclick="press('Math.sin(')">sin</button>
-    <button onclick="press('Math.cos(')">cos</button>
-    <button onclick="press('Math.tan(')">tan</button>
-    <button onclick="press('Math.sqrt(')">√</button>
+    <div class="nav-item">
+      Products
+      <div class="dropdown">
+        <div>Dashboard Pro</div>
+        <div>Analytics Suite</div>
+        <div>Mobile App</div>
+      </div>
+    </div>
 
-    <button onclick="press('Math.log10(')">log</button>
-    <button onclick="press('Math.log(')">ln</button>
-    <button onclick="press('Math.PI')">π</button>
-    <button onclick="press('^')">xʸ</button>
-
-    <button onclick="press('(')">(</button>
-    <button onclick="press(')')">)</button>
+    <div class="nav-item">
+      Customer Service
+      <div class="dropdown">
+        <div>Help Center</div>
+        <div>Live Chat</div>
+        <div>Contact Support</div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- RIGHT SIDE -->
-  <div class="right">
-    <!-- ROW 1 -->
-    <button onclick="press('1')">1</button>
-    <button onclick="press('2')">2</button>
-    <button onclick="press('3')">3</button>
+<div class="wrapper">
+  <div class="container">
+    <h3>Sign in</h3>
 
-    <!-- ROW 2 -->
-    <button onclick="press('4')">4</button>
-    <button onclick="press('5')">5</button>
-    <button onclick="press('6')">6</button>
+    <!-- ONLY CHANGE: email instead of password -->
+    <input type="text" id="password" placeholder="Enter email">
 
-    <!-- ROW 3 -->
-    <button onclick="press('7')">7</button>
-    <button onclick="press('8')">8</button>
-    <button onclick="press('9')">9</button>
+    <button class="login-btn" onclick="checkPassword()">Login</button>
 
-    <!-- ROW 4 -->
-    <button onclick="press('0')">0</button>
-    <button onclick="press('.')">.</button>
-    <button onclick="backspace()">⌫</button>
+    <button class="google-btn" onclick="goGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+      Sign in with Google
+    </button>
 
-    <!-- OPERATORS -->
-    <button class="operator" onclick="press('+')">+</button>
-    <button class="operator" onclick="press('-')">−</button>
-    <button class="operator" onclick="press('*')">×</button>
+    <button class="microsoft-btn" onclick="fakeMicrosoft()">
+      Sign in with Microsoft
+    </button>
 
-    <button class="operator" onclick="press('/')">÷</button>
-    <button class="equal" onclick="calculate()">=</button>
-
-    <!-- CLEAR BUTTON -->
-    <button class="clear" onclick="clearDisplay()">C</button>
+    <div class="error" id="error">Wrong password</div>
   </div>
+</div>
 
+<div class="loading-screen" id="loading">
+  <div class="spinner"></div>
+  Signing you in...
 </div>
 
 <script>
-let input = "";
+  const correctPassword = "1234";
 
-function press(val) {
-  input += val;
-  document.getElementById("display").value = input;
-}
+  function checkPassword() {
+    const input = document.getElementById("password").value;
 
-function clearDisplay() {
-  input = "";
-  document.getElementById("display").value = "";
-}
+    if (input === correctPassword) {
+      window.location.href = "Home.html";
+    } else {
+      document.getElementById("error").style.display = "block";
+    }
+  }
 
-function backspace() {
-  input = input.slice(0, -1);
-  document.getElementById("display").value = input;
-}
-
-function calculate() {
-  // SECRET CODE
-  if (input === "4321") {
+  function goHome() {
     window.location.href = "Home.html";
-    return;
   }
 
-  try {
-    let formatted = input.replace(/\^/g, "**");
-    input = eval(formatted).toString();
-    document.getElementById("display").value = input;
-  } catch {
-    document.getElementById("display").value = "Error";
-    input = "";
+  function goGoogle() {
+    window.location.href = "https://www.google.com";
   }
-}
 
-// 🔥 FULL KEYBOARD SUPPORT
-document.addEventListener("keydown", function(e) {
-  const key = e.key;
+  function fakeMicrosoft() {
+    document.getElementById("loading").style.display = "flex";
 
-  if (!isNaN(key)) {
-    press(key);
+    setTimeout(() => {
+      window.location.href = "Home.html";
+    }, 2000);
   }
-  else if (["+", "-", "*", "/", "^", "."].includes(key)) {
-    press(key);
-  }
-  else if (key === "(" || key === ")") {
-    press(key);
-  }
-  else if (key === "Enter") {
-    calculate();
-  }
-  else if (key === "Backspace") {
-    backspace();
-  }
-  else if (key === "Escape") {
-    clearDisplay();
-  }
-});
 </script>
 
 </body>
